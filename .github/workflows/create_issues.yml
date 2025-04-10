@@ -23,9 +23,9 @@ jobs:
         headers = {"Authorization": f"token {token}"}
 
         issues = [
-          {"title": "Issue 1", "body": "This is the first issue."},
-          {"title": "Issue 2", "body": "This is the second issue."},
-          {"title": "Issue 3", "body": "This is the third issue."}
+          {"title": "Test-Issue 1:Summarize code", "body": "I need a summary of all files in the repository. Write 1-2 sentence for each file. \n git-bob ask gemini to answer this."},
+          {"title": "Issue 2:Story Telling", "body": "The blond Jonny and his robodog have an adventure in the bank quarter of the city. \n story-teller try to write a story about this. Also paint a picture of the scene."},
+          {"title": "Issue 3:Statistics question", "body": "Assume I have some data and I would like to apply a statistical test to it. I need to go through a decision tree to find the right test. How can I outline such a decition tree? \n git-bob answer"}
         ]
 
         for issue in issues:
