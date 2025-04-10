@@ -1,0 +1,37 @@
+name: Create Issues
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create issues
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python - <<EOF
+        import requests
+
+        repo = "${{ github.repository }}"
+        token = "${{ secrets.GITHUB_TOKEN }}"
+        headers = {"Authorization": f"token {token}"}
+
+        issues = [
+          {"title": "Test-Issue 1:Summarize code", "body": "I need a summary of all files in the repository. Write 1-2 sentence for each file. \n git-bob ask gemini to answer this."},
+          {"title": "Issue 2:Story Telling", "body": "The blond Jonny and his robodog have an adventure in the bank quarter of the city. \n story-teller try to write a story about this. Also paint a picture of the scene."},
+          {"title": "Issue 3:Statistics question", "body": "Assume I have some data and I would like to apply a statistical test to it. I need to go through a decision tree to find the right test. How can I outline such a decition tree? \n git-bob answer"}
+        ]
+
+        for issue in issues:
+          response = requests.post(f"https://api.github.com/repos/{repo}/issues", json=issue, headers=headers)
+          if response.status_code == 201:
+            print(f"Successfully created issue: {issue['title']}")
+          else:
+            print(f"Failed to create issue: {issue['title']}, {response.content}")
+        EOF
