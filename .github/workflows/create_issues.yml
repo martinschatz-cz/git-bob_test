@@ -1,0 +1,37 @@
+name: Create Issues
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create issues
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python - <<EOF
+        import requests
+
+        repo = "${{ github.repository }}"
+        token = "${{ secrets.GITHUB_TOKEN }}"
+        headers = {"Authorization": f"token {token}"}
+
+        issues = [
+          {"title": "Issue 1", "body": "This is the first issue."},
+          {"title": "Issue 2", "body": "This is the second issue."},
+          {"title": "Issue 3", "body": "This is the third issue."}
+        ]
+
+        for issue in issues:
+          response = requests.post(f"https://api.github.com/repos/{repo}/issues", json=issue, headers=headers)
+          if response.status_code == 201:
+            print(f"Successfully created issue: {issue['title']}")
+          else:
+            print(f"Failed to create issue: {issue['title']}, {response.content}")
+        EOF
